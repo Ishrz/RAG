@@ -1,0 +1,29 @@
+{
+  "name": "rag",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ishrz/RAG.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ishrz/RAG/issues"
+  },
+  "homepage": "https://github.com/Ishrz/RAG#readme",
+  "dependencies": {
+    "@langchain/openai": "^1.5.1",
+    "@langchain/textsplitters": "^1.0.1",
+    "cheerio": "^1.2.0",
+    "langchain": "^1.5.0",
+    "pdf-parse": "^2.4.5"
+  }
+}
