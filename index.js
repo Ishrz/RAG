@@ -7,43 +7,43 @@ import {MistralAIEmbeddings} from "@langchain/mistralai"
 import {Index, Pinecone} from "@pinecone-database/pinecone"
 
 
-const pdfBuffer = await fs.readFile("./story.pdf")
+// const pdfBuffer = await fs.readFile("./story.pdf")
 
-const pdfUnit8Array = new Uint8Array(pdfBuffer)
+// const pdfUnit8Array = new Uint8Array(pdfBuffer)
 
-const parser = new PDFParse(pdfUnit8Array)
-// console.log(parser)
+// const parser = new PDFParse(pdfUnit8Array)
+// // console.log(parser)
 
-let doc = await parser.getText()
-// console.log(doc.text)
-// doc =doc.text
+// let doc = await parser.getText()
+// // console.log(doc.text)
+// // doc =doc.text
 
-const extractedText = typeof doc === "object" && doc !== null ? doc.text : doc
+// const extractedText = typeof doc === "object" && doc !== null ? doc.text : doc
 
 
-const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize:700,
-    chunkOverlap:0
-})
+// const splitter = new RecursiveCharacterTextSplitter({
+//     chunkSize:700,
+//     chunkOverlap:0
+// })
 
-const chunks = await splitter.splitText(extractedText)
+// const chunks = await splitter.splitText(extractedText)
 
-// console.log(splitDoc)
+// // console.log(splitDoc)
 
 const embedding = new MistralAIEmbeddings({
     apiKey:process.env.MSITRAL_API_KEY,
     model:"mistral-embed"
 })
 
-const embeddedChunks = await Promise.all( chunks.map(async (chunk )=> {
-        const embedded = await embedding.embedQuery(chunk)
-        return{
-            text:chunk,
-            embedded
-        }
-})  )
+// const embeddedChunks = await Promise.all( chunks.map(async (chunk )=> {
+//         const embedded = await embedding.embedQuery(chunk)
+//         return{
+//             text:chunk,
+//             embedded
+//         }
+// })  )
 
-// console.log(embeddedChunks)
+// // console.log(embeddedChunks)
 
 
 const pc = new Pinecone({
@@ -52,20 +52,29 @@ const pc = new Pinecone({
 
 const index = await pc.index({host:"https://story-1eduacu.svc.aped-4627-b74a.pinecone.io"})
 
-const result = await index.upsert({
-records: embeddedChunks.map( (embeddings,idx) => ({
-    id:`doc-${idx}`,
-    values:embeddings.embedded,
-    metadata:{
-        text:embeddings.text
-    }
-}))
-})
+// const result = await index.upsert({
+// records: embeddedChunks.map( (embeddings,idx) => ({
+//     id:`doc-${idx}`,
+//     values:embeddings.embedded,
+//     metadata:{
+//         text:embeddings.text
+//     }
+// }))
+// })
 
-console.log(result)
+// console.log(result)
 
 
 
+let quetion = "his what become sharper";
+
+const embeddedQuery = await embedding.embedQuery(quetion)
+
+// console.log(embeddedQuery)
+
+const result = await index.query({topK:5, vector:embeddedQuery,includeMetadata:true})
+
+console.log(JSON.stringify(result))
 
 
 
