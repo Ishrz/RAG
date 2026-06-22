@@ -50,7 +50,7 @@ const pc = new Pinecone({
     apiKey:process.env.PINECONE_API_KEY
 })
 
-const index = await pc.index({host:"https://story-1eduacu.svc.aped-4627-b74a.pinecone.io"})
+const index = await pc.index({host:process.env.PINECONE_HOST_KEY})
 
 // const result = await index.upsert({
 // records: embeddedChunks.map( (embeddings,idx) => ({
